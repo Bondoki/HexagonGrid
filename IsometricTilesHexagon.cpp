@@ -42,21 +42,10 @@ private:
 	// Sprite that holds all imagery
 	olc::Sprite *sprIsom = nullptr;
 
-	// Pointer to create 2D world array
-	//int *pWorld = nullptr;
+        // list to order for drawing
+	std::list<Hex> hexlist;
         
-        Hex hextiles ={+1,0,-1};
-        
-        using HexHash=std::unordered_set<Hex,decltype(hexhash),decltype(hexequal)>;
-        HexHash hexmap{HexHash(10,hexhash,hexequal)};//={};
-        
-        using HexSet=std::set<Hex,decltype(hexcomp)>;
-        HexSet hexset{HexSet(hexcomp)};//={};
-        
-        //using HexList=std::list<Hex,decltype(hexcomp)>;
-        //HexList hexlist{HexList(10)};//={};
-        std::list<Hex> hexlist;
-        
+        // HexTile to Value
         using HexMap=std::unordered_map<Hex, int,decltype(hexhash), decltype(hexequal)>;
         HexMap heights{HexMap(10,hexhash,hexequal)};
         
@@ -72,7 +61,7 @@ public:
 		// Load sprites used in demonstration
 		sprIsom = new olc::Sprite("assets/hextiles.png");
 
-		createBoard(1);
+		createBoard(2);
                
 		return true;
 	}
@@ -220,6 +209,25 @@ public:
           
                 fTotalElapsedTime += fElapsedTime;
 		Clear(olc::GREY);
+                
+                if (GetKey(olc::Key::K1).bPressed)
+                  createBoard(0);
+                if (GetKey(olc::Key::K2).bPressed)
+                  createBoard(1);
+                if (GetKey(olc::Key::K3).bPressed)
+                  createBoard(2);
+                if (GetKey(olc::Key::K4).bPressed)
+                  createBoard(3);
+                if (GetKey(olc::Key::K5).bPressed)
+                  createBoard(4);
+                if (GetKey(olc::Key::K6).bPressed)
+                  createBoard(5);
+                if (GetKey(olc::Key::K7).bPressed)
+                  createBoard(6);
+                if (GetKey(olc::Key::K8).bPressed)
+                  createBoard(7);
+                
+                
 
 		// Get Mouse in world
 		olc::vi2d vMouse = { GetMouseX(), GetMouseY() };
@@ -297,6 +305,34 @@ public:
                                 //heights.at(Hex(vSelected.x,vSelected.y,-vSelected.x-vSelected.y)) %=7;
                                 //heights.at(Hex(vSelected.x,vSelected.y,-vSelected.x-vSelected.y))++;
                                 //std::cout << "modify" << std::endl;
+                        }
+                        
+		}
+                
+                // Handle mouse click to toggle tile - right click
+		if (GetMouse(1).bPressed)
+		{
+			// Guard array boundary
+                         auto got = heights.find (Hex(vSelected.x,vSelected.y,-vSelected.x-vSelected.y));
+                  
+                        // tile doesn't exist -> create 
+                        if (( got == heights.end() ))
+			{
+                                hexlist.push_back(Hex(vSelected.x,vSelected.y,-vSelected.x-vSelected.y));
+                                heights[Hex(vSelected.x,vSelected.y,-vSelected.x-vSelected.y)] = 5;
+                                
+                                // and sort again
+                                hexlist.sort(hexcomp_q);
+                                hexlist.sort(hexcomp_r);
+                        }
+                        else // tile exists -> delete
+                        {
+                                heights.erase(Hex(vSelected.x,vSelected.y,-vSelected.x-vSelected.y));
+                                hexlist.remove(Hex(vSelected.x,vSelected.y,-vSelected.x-vSelected.y));
+                                
+                                // and sort again
+                                hexlist.sort(hexcomp_q);
+                                hexlist.sort(hexcomp_r);
                         }
                         
 		}

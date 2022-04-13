@@ -21,6 +21,10 @@ struct Hex { // Axial storage, cube constructor
     inline int get_q() const { return q_; }
     inline int get_r() const { return r_; }
     inline int get_s() const { return - q_ - r_; }
+    
+    public:
+    bool operator == (const Hex& h) const { return ((q_ == h.get_q()) && (r_ == h.get_r())); }
+    
 }; 
 
 Hex hex_add(Hex a, Hex b)
