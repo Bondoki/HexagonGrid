@@ -72,113 +72,148 @@ public:
 		// Load sprites used in demonstration
 		sprIsom = new olc::Sprite("assets/hextiles.png");
 
-		// Create empty world
-		//pWorld = new int[vWorldSize.x * vWorldSize.y]{ 0 };
-                
-//                 for (int y = 0; y < vWorldSize.y; y++)
-// 		{
-// 			for (int x = 0; x < vWorldSize.x; x++)
-// 			{
-//                           pWorld[y*vWorldSize.x + x]=rand()%5+1;//(y*vWorldSize.x + x)%4+1;
-//                         }
-//                 }
-                
-                
-                for (int r = -2; r <= 2; r++) {
-                  for (int s = -2; s <= 2; s++) {
-                      hexset.insert(Hex(-r-s, r, s));
-                  }
-                }
-                
-                std::cout << "myset contains:";
-  for (auto it=hexset.begin(); it!=hexset.end(); ++it)
-    std::cout << ' ' << (*it).get_q() << ":" << (*it).get_r();
-  std::cout << '\n';
-  
-  
-   for (int r = -2; r <= 2; r++) {
-                  for (int s = -2; s <= 2; s++) {
-                      if(!(r == 0 && s == 0))
-                      {
-                      hexlist.push_back(Hex(-r-s, r, s));
-                      heights[Hex(-r-s, r, s)] = std::abs(r);// rand()%5+1;;
-                      }
-                  }
-                }
-                
-                std::cout << "mylist contains:";
-                hexlist.sort(hexcomp);
-  for (auto it=hexlist.begin(); it!=hexlist.end(); ++it)
-    std::cout << ' ' << (*it).get_q() << ":" << (*it).get_r();
-  std::cout << '\n';
-                
-                //Parallelograms 1
-                /*
-                for (int q = 0; q < vWorldSize.x; q++) {
-                  for (int r = 0; r < vWorldSize.y; r++) {
-                      hexmap.insert(Hex(q, r, -q-r));
-                  }
-                }
-                */
-                
-                //Parallelograms 2
-                for (int r = -vWorldSize.x; r <= vWorldSize.x; r++) {
-                  for (int s = -vWorldSize.y; s <= vWorldSize.y; s++) {
-                      hexmap.insert(Hex(-r-s, r, s));
-                  }
-                }
-                
-                std::cout << "hexmap contains:";
-  for (auto it=hexmap.begin(); it!=hexmap.end(); ++it)
-    std::cout << ' ' << (*it).get_q() << ":" << (*it).get_r();
-  std::cout << '\n';
-
-HexHash::const_iterator got = hexmap.find (Hex(1, 6, -1-6));
-
-  if ( got == hexmap.end() )
-    std::cout << "not found in myset";
-  else
-    std::cout << "found is in myset";
-
-  std::cout << std::endl;
-  
-  //Hexagon
-/*  hexlist.clear();
-  heights.clear();
-  
-for (int q = -3; q <= 3; q++) {
-    int r1 = std::max(-3, -q - 3);
-    int r2 = std::min(3, -q + 3);
-    for (int r = r1; r <= r2; r++) {
-      if(hex_distance(Hex(q, r, -q-r),Hex(0,0,0)) != 1)
-      {hexlist.push_back(Hex(q, r, -q-r));
-       heights[Hex(q, r, -q-r)] = std::abs(r);// rand()%5+1;;
-       // map.insert(Hex(q, r, -q-r));
-      }
-    }
-}
-*/
-
-  //Rectangle
-  hexlist.clear();
-  heights.clear();
-for (int q = -3; q <= 3; q++) { // flat top
-    int q_offset = floor(q/2.0); // or q>>1
-    for (int r = -2 - q_offset; r <= 5 - q_offset; r++) {
-        if(hex_distance(Hex(q, r, -q-r),Hex(0,0,0)) != 1)
-        {
-      hexlist.push_back(Hex(q, r, -q-r));
-       heights[Hex(q, r, -q-r)] = std::abs(r)%5+1;
-        }
-        //map.insert(Hex(q, r, -q-r));
-    }
-}
-                
-                hexlist.sort(hexcomp_q);
-                hexlist.sort(hexcomp_r);
-                
+		createBoard(1);
+               
 		return true;
 	}
+	
+	void createBoard(int nr)
+        {
+          //clear the list and the map
+          hexlist.clear();
+          heights.clear();
+          
+          int dist = 4;
+          
+          switch(nr)
+          {
+            case 0: //Rectangle 1
+                    for (int q = -3; q <= 3; q++)
+                    { // flat top
+                      int q_offset = floor(q/2.0); // or q>>1
+                      for (int r = -5 - q_offset; r <= 4 - q_offset; r++)
+                      {
+                        if(hex_distance(Hex(q, r, -q-r),Hex(0,0,0)) != 1)
+                        {
+                          hexlist.push_back(Hex(q, r, -q-r));
+                          heights[Hex(q, r, -q-r)] = std::abs(r)%9+1;
+                        }
+                      }
+                    }
+                    
+                    break;
+    
+            case 1: //Rectangle 2
+                    for (int q = -3; q <= 3; q++)
+                    { // flat top
+                      int q_offset = floor((q+1)/2.0); 
+                      for (int r = -4 - q_offset; r <= 4 - q_offset; r++)
+                      {
+                        if(hex_distance(Hex(q, r, -q-r),Hex(0,0,0)) != 1)
+                        {
+                          hexlist.push_back(Hex(q, r, -q-r));
+                          heights[Hex(q, r, -q-r)] = std::abs(r)%9+1;
+                        }
+                      }
+                    }
+                    
+                    break;
+    
+            case 2: //Hexagon
+                    dist = 4;
+                    for (int q = -dist; q <= dist; q++)
+                    {
+                      int r1 = std::max(-dist, -q - dist);
+                      int r2 = std::min(dist, -q + dist);
+                      for (int r = r1; r <= r2; r++)
+                      {
+                          hexlist.push_back(Hex(q, r, -q-r));
+                          heights[Hex(q, r, -q-r)] = (hex_distance(Hex(q, r, -q-r),Hex(0,0,0))+4)%9+1;
+                      }
+                    }
+                    break;
+                    
+            case 3: //Parallelograms 1
+                    dist = 3;
+                    for (int q = -dist; q <= dist; q++) 
+                    {
+                      for (int r = -3; r <= 3; r++)
+                      {
+                        if(!((r==0) && (q==0)))
+                        {
+                          hexlist.push_back(Hex(q, r, -q-r));
+                          heights[Hex(q, r, -q-r)] = (std::abs(r))%9+1;
+                        }
+                      }
+                    }
+                    break;
+                    
+            case 4: //Parallelograms 2
+                    dist = 2;
+                    for (int r = -dist; r <= dist; r++)
+                    {
+                      for (int s = -2; s <= 2; s++) 
+                      {
+                        if(!((r==0) && (s==0)))
+                        {
+                          hexlist.push_back(Hex(-r-s, r, s));
+                          heights[Hex(-r-s, r, s)] = (std::abs(r))%9+1;
+                        }
+                      }
+                    }
+                    break;
+                    
+            case 5: // Parallelograms 3
+                    dist = 2;
+                    for (int s = -dist; s <= dist; s++)
+                    {
+                      for (int q = -3; q <= 3; q++) 
+                      {
+                        if(!((s==0) && (q==0)))
+                        {
+                          hexlist.push_back(Hex(q, -q-s, s));
+                          heights[Hex(q, -q-s, s)] = (std::abs(q))%9+1;
+                        }
+                      }
+                    }
+                    break;
+                    
+            case 6: // Triangle 1
+                    dist = 6;
+                    for (int q = 0; q <= dist; q++)
+                    {
+                      for (int r = dist - q; r <= dist; r++)
+                      {
+                        hexlist.push_back(Hex(q-2, r-dist+1, -q+2-r+dist-1));
+                        heights[Hex(q-2, r-dist+1, -q+2-r+dist-1)] = (std::abs(q))%9+1;
+                      }
+                    }
+                    break;
+                    
+            case 7: // Triangle 2
+                    dist = 6;
+                    for (int q = 0; q <= dist; q++)
+                    {
+                      for (int r = 0; r <= dist-q; r++)
+                      {
+                        hexlist.push_back(Hex(q-2, (r-dist/2+1), -(q-2)+(-r+dist/2-1)));
+                        heights[Hex(q-2, (r-dist/2+1), -(q-2)+(-r+dist/2-1))] = (std::abs(q))%9+1;
+                      }
+                    }
+                    break;
+                    
+            default: break;
+          }
+          
+          // center tile 0,0 to screen center
+          vOriginScreen.x= 300-vTileSize.x/2;
+          vOriginScreen.y= 200-vTileSize.y/2;
+          
+          // sort the list to draw from top to bottom
+           hexlist.sort(hexcomp_q);
+           hexlist.sort(hexcomp_r);
+                
+        }
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{
@@ -498,7 +533,7 @@ for (int q = -3; q <= 3; q++) { // flat top
 int main()
 {
 	IsometricTilesHexagon demo;
-	if (demo.Construct(512, 480, 1, 1))
+	if (demo.Construct(600, 400, 1, 1))
 		demo.Start();
 	return 0;
 }
