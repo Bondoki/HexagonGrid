@@ -26,8 +26,8 @@
  Note3: For a more isometric 2.5 view you should first rotate your hexagon by 45°
  and scale it by 50% in height direction.
  
- License: This piece of code is licensed to GNU GPLv3 according to
- https://github.com/OneLoneCoder/videos/blob/master/LICENSE
+ License: This piece of code is licensed to Creative Commons Zero v1.0 Universal according to
+ https://github.com/Bondoki/HexagonGrid/blob/main/LICENSE
  also attributing Javidx9 for the unique and easy-to-use olc::PixelGameEngine and the underlying OLC-3 license see
  https://github.com/OneLoneCoder/olcPixelGameEngine/wiki/Licencing
  For more information about Javidx9 and OneLoneCoder please see https://github.com/OneLoneCoder
