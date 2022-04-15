@@ -1,5 +1,5 @@
-
-//based on https://www.redblobgames.com/grids/hexagons/implementation.html
+// Generated code -- CC0 -- No Rights Reserved -- http://www.redblobgames.com/grids/hexagons/
+// Based on https://www.redblobgames.com/grids/hexagons/implementation.html
 
 #include <cassert>
 #include <cstdlib>
