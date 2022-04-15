@@ -51,6 +51,12 @@ private:
         
         // Board-style name
         std::string sBoardName;
+        
+        // Animated elements sprite
+	olc::Renderable sprWater;
+        olc::Renderable sprAir;
+        olc::Renderable sprFire;
+        olc::Renderable sprEarth;
 
 public:
 	bool OnUserCreate() override
@@ -63,6 +69,11 @@ public:
 		sprIsom.Load("assets/hextiles.png");
                 
                 sprStar.Load("assets/star.png");
+                
+                sprWater.Load("assets/hex_water_anim.png");
+                sprAir.Load("assets/hex_air_anim.png");
+                sprFire.Load("assets/hex_fire_anim.png");
+                sprEarth.Load("assets/hex_earth_anim.png");
                 
                 // we start with hexagonal board
                 sBoardName="";
@@ -85,7 +96,7 @@ public:
                     sBoardName="Rectangle 1";
                     for (int q = -3; q <= 3; q++)
                     { // flat top
-                      int q_offset = floor(q/2.0); // or q>>1
+                      int q_offset = floor((q-1)/2.0); // or q>>1
                       for (int r = -5 - q_offset; r <= 4 - q_offset; r++)
                       {
                         if(hex_distance(Hex(q, r, -q-r),Hex(0,0,0)) != 1)
@@ -111,6 +122,13 @@ public:
                           heights[Hex(q, r, -q-r)] = std::abs(r)%9+1;
                         }
                       }
+                    }
+                    for (int q = -3; q <= 3; q+=2)
+                    { // flat top
+                      int r = 4 - floor((q)/2.0); 
+                       hexlist.push_back(Hex(q, r, -q-r));
+                       heights[Hex(q, r, -q-r)] = std::abs(r)%9+1;
+                      //for (int r = -4 - q_offset; r <= 4 - q_offset; r+=2)
                     }
                     
                     break;
@@ -387,18 +405,46 @@ public:
 					DrawPartialDecal({vWorld.x+moveXSelected, vWorld.y+moveYSelected}, sprIsom.Decal(), {0 * vTileSize.x, 1 * vTileSize.y}, {vTileSize.x, vTileSize.y});
 					break;
 				case 6:
-					DrawPartialDecal({vWorld.x+moveXSelected, vWorld.y+moveYSelected}, sprIsom.Decal(), {1 * vTileSize.x, 1 * vTileSize.y}, {vTileSize.x, vTileSize.y});
-					break;
+                                        if ( hexequal(Hex(vSelected.x,vSelected.y,-vSelected.x-vSelected.y), Hex(Hex(q,r,s))) )
+                                        {
+                                          DrawPartialDecal({vWorld.x+moveXSelected, vWorld.y+moveYSelected}, sprFire.Decal(), {int(fmodf(fTotalElapsedTime*10,7.0f)) * vTileSize.x, 0 * vTileSize.y}, {vTileSize.x, vTileSize.y});
+                                        }
+                                        else
+                                        {
+                                          DrawPartialDecal({vWorld.x+moveXSelected, vWorld.y+moveYSelected}, sprIsom.Decal(), {1 * vTileSize.x, 1 * vTileSize.y}, {vTileSize.x, vTileSize.y});
+                                        }
+                                        break;
 				case 7:
-					DrawPartialDecal({vWorld.x+moveXSelected, vWorld.y+moveYSelected}, sprIsom.Decal(), {2 * vTileSize.x, 1 * vTileSize.y}, {vTileSize.x, vTileSize.y});
-					break;
+                                        if ( hexequal(Hex(vSelected.x,vSelected.y,-vSelected.x-vSelected.y), Hex(Hex(q,r,s))) )
+                                        {
+                                          DrawPartialDecal({vWorld.x+moveXSelected, vWorld.y+moveYSelected}, sprEarth.Decal(), {int(fmodf(fTotalElapsedTime*9,18.0f)) * vTileSize.x, 0 * vTileSize.y}, {vTileSize.x, vTileSize.y});
+                                        }
+                                        else
+                                        {
+                                          DrawPartialDecal({vWorld.x+moveXSelected, vWorld.y+moveYSelected}, sprIsom.Decal(), {2 * vTileSize.x, 1 * vTileSize.y}, {vTileSize.x, vTileSize.y});
+                                        }
+                                        break;
                                 case 8:
-					DrawPartialDecal({vWorld.x+moveXSelected, vWorld.y+moveYSelected}, sprIsom.Decal(), {3 * vTileSize.x, 1 * vTileSize.y}, {vTileSize.x, vTileSize.y});
-					break;
+                                        if ( hexequal(Hex(vSelected.x,vSelected.y,-vSelected.x-vSelected.y), Hex(Hex(q,r,s))) )
+                                        {
+                                          DrawPartialDecal({vWorld.x+moveXSelected, vWorld.y+moveYSelected}, sprWater.Decal(), {int(fmodf(fTotalElapsedTime*9,18.0f)) * vTileSize.x, 0 * vTileSize.y}, {vTileSize.x, vTileSize.y});
+                                        }
+                                        else
+                                        {
+                                          DrawPartialDecal({vWorld.x+moveXSelected, vWorld.y+moveYSelected}, sprIsom.Decal(), {3 * vTileSize.x, 1 * vTileSize.y}, {vTileSize.x, vTileSize.y});
+                                        }
+                                        break;
                                         
                                  case 9:
-					DrawPartialDecal({vWorld.x+moveXSelected, vWorld.y+moveYSelected}, sprIsom.Decal(), {4 * vTileSize.x, 1 * vTileSize.y}, {vTileSize.x, vTileSize.y});
-					break;
+                                        if ( hexequal(Hex(vSelected.x,vSelected.y,-vSelected.x-vSelected.y), Hex(Hex(q,r,s))) )
+                                        {
+                                          DrawPartialDecal({vWorld.x+moveXSelected, vWorld.y+moveYSelected}, sprAir.Decal(), {int(fmodf(fTotalElapsedTime*9,6.0f)) * vTileSize.x, 0 * vTileSize.y}, {vTileSize.x, vTileSize.y});
+                                        }
+                                        else
+                                        {
+                                          DrawPartialDecal({vWorld.x+moveXSelected, vWorld.y+moveYSelected}, sprIsom.Decal(), {4 * vTileSize.x, 1 * vTileSize.y}, {vTileSize.x, vTileSize.y});
+                                        }
+                                        break;
                                 
 				}
 				
@@ -411,6 +457,11 @@ public:
                   if ( hexequal(Hex(vSelected.x,vSelected.y,-vSelected.x-vSelected.y), Hex(Hex(q,r,s))) )
                   {
                       olc::vi2d vWorld = AxialToScreen(vSelected.x,vSelected.y);
+                      
+                      
+                      //DrawPartialDecal({vWorld.x, vWorld.y+5*std::sin(fTotalElapsedTime*5)}, sprWater.Decal(), {int(fmodf(fTotalElapsedTime*9,18.0f)) * vTileSize.x, 0 * vTileSize.y}, {vTileSize.x, vTileSize.y});
+                      //DrawPartialDecal({vWorld.x, vWorld.y+5*std::sin(fTotalElapsedTime*5)}, sprWater.Decal(), {int(fmodf(fTotalElapsedTime*9,6.0f)) * vTileSize.x, 0 * vTileSize.y}, {vTileSize.x, vTileSize.y});
+                  
                       
                       DrawPartialDecal({vWorld.x, vWorld.y+5*std::sin(fTotalElapsedTime*5)}, sprIsom.Decal(), {0 * vTileSize.x, 0 * vTileSize.y}, {vTileSize.x, vTileSize.y});
                   }
@@ -441,6 +492,9 @@ public:
 		DrawString(4, 4, "Mouse   : " + std::to_string(vMouse.x) + ", " + std::to_string(vMouse.y), olc::BLACK);
 		DrawString(4, 14, "Selected: " + std::to_string(vSelected.x) + ", " + std::to_string(vSelected.y), olc::BLACK);
 		DrawString(4, 24, "Style: " + sBoardName, olc::BLACK);
+		
+                DrawString(4, ScreenHeight()-20, "Use left and right mouse button to toggle tiles.", olc::BLACK);
+		DrawString(4, ScreenHeight()-10, "Use number keys 1-7 to toggle layout.", olc::BLACK);
 		
                 // Graceful exit if user is in full screen mode
                 return !GetKey(olc::Key::ESCAPE).bPressed;
