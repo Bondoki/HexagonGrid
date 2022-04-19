@@ -1,6 +1,6 @@
 /*
  Created on 13. April 2022
- Last modified on 15. April 2022
+ Last modified on 19. April 2022
  Author: bondoki
  
  Purpose: Rendering of the hexagon tiles in various layout to emphasize pseudo 2.5 view.
@@ -523,7 +523,7 @@ public:
       DrawString(4, 24, "Style: " + sBoardName, olc::BLACK);
       
       DrawString(4, ScreenHeight()-20, "Use left and right mouse button to toggle tiles.", olc::BLACK);
-      DrawString(4, ScreenHeight()-10, "Use number keys 1-7 to toggle layout.", olc::BLACK);
+      DrawString(4, ScreenHeight()-10, "Use number keys 1-8 to toggle layout.", olc::BLACK);
       
       // Graceful exit if user is in full screen mode
       return !GetKey(olc::Key::ESCAPE).bPressed;

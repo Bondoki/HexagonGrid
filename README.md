@@ -14,10 +14,10 @@ Just do for standard compilation (tested with gcc 8.2.1):
 ````
 
 ## Usage
-Simply use the mouse to hover on the board.
-Use the left mouse button to toggle the tile style.
-Use the right mouse button to toggle the tile on/off.
-Use the number keys 1-7 to select board style.
+Simply use the mouse to hover on the board.  
+Use the left mouse button to toggle the tile style.  
+Use the right mouse button to toggle the tile on/off.  
+Use the number keys 1-8 to select board style.  
 ESC : quit
 
 
